@@ -31,7 +31,7 @@ const teamMembers: TeamMember[] = [
     name: "Shaurya",
     role: "Full Stack Developer",
     avatar: "https://github.com/ShauryaRahlon.png",
-    github: "https://github.com/vansh1233",
+    github: "https://github.com/ShauryaRahlon",
     linkedin: "https://linkedin.com/in/shaurya-rahlon",
     codeforces: "https://codeforces.com/profile/Shaurya003",
   },
