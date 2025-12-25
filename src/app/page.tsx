@@ -9,6 +9,7 @@ import {
 import Link from "next/link";
 import { BoxReveal } from "@/components/magicui/box-reveal";
 import InstallPWAButton from "@/components/PWA";
+import { TeamSection } from "@/components/team-section";
 export default function Page() {
   return (
     <>
@@ -112,6 +113,7 @@ export default function Page() {
           <ThemeToggle />
         </div>
       </div>
+      <TeamSection />
     </>
   );
 }
