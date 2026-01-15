@@ -20,28 +20,16 @@ interface ContestCardProps {
   reminders: Reminder[];
   onSetReminder?: (contestId: string) => void;
   onViewDetails?: (contest: Contest) => void;
+  isGuest?: boolean;
 }
-import axios from "axios";
-async function addReminder(contest: Contest) {
-  try {
-    const response = await axios.post("/api/set-reminder", { contest });
-    return {
-      success: response.data.success,
-      message: response.data.message,
-    };
-  } catch (error) {
-    console.error("Error setting reminder:", error);
-    return {
-      success: false,
-      message: "Failed to set reminder.",
-    };
-  }
-}
+
+// ... (addReminder function remains same)
 
 export function ContestCard({
   contest,
   onSetReminder,
   reminders,
+  isGuest = false,
 }: ContestCardProps) {
   // Function to check if reminder is set for this contest
   const isReminderSet = () => {
@@ -67,6 +55,20 @@ export function ContestCard({
   };
 
   const handleSetReminder = () => {
+    if (isGuest) {
+      const isSetting = !reminderSet;
+      setReminderSet(isSetting);
+      toast(
+        isSetting
+          ? "Reminder set: You will be notified 1 hour before the contest starts"
+          : "Reminder removed: You will no longer be notified about this contest",
+        {
+          description: "To configure custom reminder times, please sign in and visit Settings.",
+        }
+      );
+      return;
+    }
+
     addReminder(contest).then((result) => {
       if (result && result.success) {
         const isSetting = !reminderSet;

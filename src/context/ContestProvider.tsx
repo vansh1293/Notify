@@ -63,12 +63,13 @@ const ContestProvider = ({ children }: { children: ReactNode }) => {
 
 
   return (
-    <ContestContext.Provider value={{ contest,reminder, contestLoading, reminderLoading, getContest, getReminder }}>
+    <ContestContext.Provider value={{ contest,reminder, contestLoading, reminderLoading, getContest, getReminder, isGuest: false }}>
       {children}
     </ContestContext.Provider>
   );
 };
 
 export { ContestContext, ContestProvider };
+
 
 

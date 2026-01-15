@@ -14,6 +14,9 @@ import React from "react";
 import { BackgroundBeams } from "@/components/ui/background-beams";
 
 
+
+
+
 const navItems = [
   {
     name: "Dashboard",
@@ -54,7 +57,10 @@ export default function PagesLayout({
               variant="ghost"
               size="icon"
               aria-label="Log out"
-              onClick={() => signOut({ callbackUrl: "/" })}
+              onClick={() => {
+                document.cookie = "guest-mode=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
+                signOut({ callbackUrl: "/" });
+              }}
               className=" h-5 w-5"
             >
               <LogOut className="h-5 w-5" />
@@ -62,6 +68,7 @@ export default function PagesLayout({
           </>
         }
       />
+      
       {children}
 
 

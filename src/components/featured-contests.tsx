@@ -6,7 +6,7 @@ import { ContestCard } from "@/components/contest-card";
 import { ContestContext } from "@/context/ContestProvider";
 
 export default function FeaturedContests() {
-  const { contest, contestLoading,reminder,reminderLoading } = useContext(ContestContext);
+  const { contest, contestLoading, reminder, reminderLoading, isGuest } = useContext(ContestContext);
 
   // Skeleton for contest cards
   const ContestCardSkeleton = () => (
@@ -40,8 +40,8 @@ export default function FeaturedContests() {
           [...contest]
             .reverse()
             .slice(0, 3)
-            .map((contest) => (
-              <ContestCard key={contest.code} contest={contest} reminders={reminder} />
+            .map((contest, i) => (
+              <ContestCard key={contest.code || i} contest={contest} reminders={reminder} isGuest={isGuest} />
             ))
         ) : (
           <p className="text-muted-foreground">
