@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+import "@/lib/polyfill";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthProvider";
@@ -20,16 +21,10 @@ export const metadata: Metadata = {
   title: "Notify | Coding Contest Notifications",
   description: "Never miss any Coding Contest.",
   manifest: "/manifest.json",
-  themeColor: "#f5be23",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
     title: "Notify",
-  },
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
   },
   icons: {
     icon: [
@@ -38,6 +33,13 @@ export const metadata: Metadata = {
     ],
     apple: [{ url: "/logo_bg_192.png", sizes: "192x192", type: "image/png" }],
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  themeColor: "#f5be23",
 };
 
 export default function RootLayout({

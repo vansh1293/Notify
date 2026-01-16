@@ -9,6 +9,7 @@ import {
 import Link from "next/link";
 import { BoxReveal } from "@/components/magicui/box-reveal";
 import InstallPWAButton from "@/components/PWA";
+import AboutPage from "./(pages)/about/page";
 export default function Page() {
   return (
     <>
@@ -66,7 +67,7 @@ export default function Page() {
         <div className="max-w-2xl w-full md:w-fit">
           <Terminal>
             <TypingAnimation>
-              &gt; git clone https://github.com/BoGeYmAn04/Contest-Tracker.git
+              &gt; git clone https://github.com/vansh1293/Notify
             </TypingAnimation>
             <AnimatedSpan delay={1200} className="text-green-500">
               <span>✔ Repository cloned.</span>
@@ -111,7 +112,11 @@ export default function Page() {
         <div className="absolute top-10 right-10">
           <ThemeToggle />
         </div>
+      
       </div>
+      <div className="mt-[2rem]">
+        <AboutPage/>
+        </div>
     </>
   );
 }

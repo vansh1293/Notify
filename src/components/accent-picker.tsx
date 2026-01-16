@@ -13,11 +13,16 @@ const presets = [
 export function AccentPicker() {
   const setAccent = (color: string) => {
     document.documentElement.style.setProperty("--info", color);
-    localStorage.setItem(ACCENT_KEY, color);
+    if (typeof window !== "undefined" && typeof window.localStorage?.setItem === "function") {
+      window.localStorage.setItem(ACCENT_KEY, color);
+    }
   };
 
   useEffect(() => {
-    const saved = localStorage.getItem(ACCENT_KEY);
+    if (typeof window === "undefined" || typeof window.localStorage?.getItem !== "function") {
+      return;
+    }
+    const saved = window.localStorage.getItem(ACCENT_KEY);
     if (saved) setAccent(saved);
   }, []);
 
