@@ -137,10 +137,22 @@ yarn install
 #### 3️⃣ **Environment Setup**
 
 ```bash
-# Create .env.local file
-check env.sample file for the same
-# Add other environment variables
+# Create .env.local in project root
+# (use your own values)
+MONGODB_URI=your_mongodb_connection_string
+NEXTAUTH_SECRET=your_strong_random_secret
+NODEMAILER_EMAIL=your_sender_email
+NODEMAILER_PASS=your_email_app_password
 ```
+
+These are the core env vars currently used by the app:
+
+- `MONGODB_URI`: MongoDB connection string used by database calls.
+- `NEXTAUTH_SECRET`: Secret used by NextAuth for signing/encryption.
+- `NODEMAILER_EMAIL`: Sender account used for verification/reset/reminder emails.
+- `NODEMAILER_PASS`: App password/token for the sender email account.
+
+> Keep `.env.local` out of git and never commit real credentials.
 
 #### 4️⃣ **Launch Development Server**
 
@@ -160,6 +172,42 @@ npm start
 ```bash
 npm test
 ```
+
+---
+
+## ⏰ **Cron Job Context**
+
+Notify uses two cron-hit APIs in production:
+
+- `GET /api/update-contest`
+  - Fetches latest contests from platforms.
+  - Detects newly added contests.
+  - Sends contest detail emails for newly discovered contests.
+
+- `GET /api/send-reminders`
+  - Sends reminders for contests starting in the next 30-60 minutes.
+  - Sends one-day reminders for contests starting in the next 23h30m-24h.
+
+### **Recommended Schedule**
+
+- `/api/send-reminders`: every 30 minutes (`*/30 * * * *`)
+- `/api/update-contest`: every 6 hours (`0 */6 * * *`)
+
+### **Example (Vercel `vercel.json`)**
+
+```json
+{
+  "crons": [
+    { "path": "/api/send-reminders", "schedule": "*/30 * * * *" },
+    { "path": "/api/update-contest", "schedule": "0 */6 * * *" }
+  ]
+}
+```
+
+If you are using another scheduler (GitHub Actions, Cron-job.org, UptimeRobot, etc.), simply send a GET request to:
+
+- `https://your-domain.com/api/send-reminders`
+- `https://your-domain.com/api/update-contest`
 
 ---
 
@@ -305,11 +353,13 @@ You can run Notify using Docker if you dont wanna go in burden of installing nod
 
 ### **1️⃣ Prepare Environment Variables**
 
-Create a `.env` file in the project root (or use the provided `.env.sample` as a template) and fill in the required values:
+Create a `.env` file in the project root and fill in the required values:
 
 ```bash
-cp .env.sample .env
-# Edit .env and set your MongoDB URI, email credentials, etc.
+MONGODB_URI=your_mongodb_connection_string
+NEXTAUTH_SECRET=your_strong_random_secret
+NODEMAILER_EMAIL=your_sender_email
+NODEMAILER_PASS=your_email_app_password
 ```
 
 ### **2️⃣ Build the Docker Image**
