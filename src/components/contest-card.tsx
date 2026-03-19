@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Clock, ExternalLink, Bell } from "lucide-react";
 import { platformNames } from "@/lib/mock-data";
+import type { ApiResponse } from "@/types/ApiResponse";
 import { formatDistanceToNow, format } from "date-fns";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -23,7 +24,25 @@ interface ContestCardProps {
   isGuest?: boolean;
 }
 
-// ... (addReminder function remains same)
+const addReminder = async (contest: Contest): Promise<ApiResponse> => {
+  try {
+    const response = await fetch("/api/set-reminder", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ contest }),
+    });
+
+    const data = (await response.json()) as ApiResponse;
+    return data;
+  } catch {
+    return {
+      success: false,
+      message: "Failed to set reminder.",
+    };
+  }
+};
 
 export function ContestCard({
   contest,
@@ -34,7 +53,7 @@ export function ContestCard({
   // Function to check if reminder is set for this contest
   const isReminderSet = () => {
     return reminders?.some(
-      (reminder) => reminder.contest?.code === contest.code
+      (reminder) => reminder.contest?.code === contest.code,
     );
   };
 
@@ -63,8 +82,9 @@ export function ContestCard({
           ? "Reminder set: You will be notified 1 hour before the contest starts"
           : "Reminder removed: You will no longer be notified about this contest",
         {
-          description: "To configure custom reminder times, please sign in and visit Settings.",
-        }
+          description:
+            "To configure custom reminder times, please sign in and visit Settings.",
+        },
       );
       return;
     }
@@ -77,7 +97,7 @@ export function ContestCard({
         toast(
           isSetting
             ? "Reminder set: You will be notified 1 hour before the contest starts"
-            : "Reminder removed: You will no longer be notified about this contest"
+            : "Reminder removed: You will no longer be notified about this contest",
         );
       } else {
         toast((result && result.message) || "Failed to set reminder.");
