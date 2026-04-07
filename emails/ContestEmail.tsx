@@ -13,6 +13,10 @@ import {
 import * as React from "react";
 import { Contest } from "@/model/Contest";
 
+type ContestEmailProps = Contest & {
+    unsubscribeUrl?: string;
+};
+
 const platformStyles = {
     LeetCode: {
         color: "text-yellow-600",
@@ -52,7 +56,8 @@ export default function ContestEmail({
     endTime,
     duration,
     url,
-}: Contest) {
+    unsubscribeUrl,
+}: ContestEmailProps) {
     const theme = platformStyles[platform as keyof typeof platformStyles];
     return (
         <Html>
@@ -88,6 +93,13 @@ export default function ContestEmail({
                             <Text className="text-xs text-gray-500 mt-6">
                                 You’re receiving this email because you opted in for contest alerts.
                             </Text>
+                            {unsubscribeUrl && (
+                                <Text className="text-xs text-gray-500 mt-2">
+                                    <Link href={unsubscribeUrl} className="underline text-gray-600">
+                                        Unsubscribe from contest emails
+                                    </Link>
+                                </Text>
+                            )}
                         </Section>
                     </Container>
                 </Body>

@@ -78,6 +78,7 @@ A huge shoutout to [Tashif Khan](https://github.com/Tashifkhan) for generously p
 
 - Customizable notification timing (1 hour, 1 day before)
 - Multiple reminder types: browser notifications, email alerts
+- One-click unsubscribe link in contest update emails
 - Contest difficulty and duration-based filtering
 - Time zone intelligent scheduling
 
