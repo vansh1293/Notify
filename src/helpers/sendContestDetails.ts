@@ -7,10 +7,11 @@ import UserModel from '@/model/User';
 import { Contest } from '@/model/Contest';
 import * as React from 'react';
 import ContestEmail from '../../emails/ContestEmail';
+import { createUnsubscribeToken } from '@/lib/unsubscribeToken';
 
 interface MailOptions {
     from: string | undefined;
-    to: string[];
+    to: string;
     subject: string;
     html: string;
 }
@@ -18,12 +19,10 @@ export async function sendContestDetails(contestDetails: Contest[]): Promise<Api
     try {
         console.log("📧 Sending contest details...");
         await dbConnect();
-        const usersLeetCode = await UserModel.find({ LeetCode: true, emailNotifications: true });
-        const usersCodeForces = await UserModel.find({ CodeForces: true, emailNotifications: true });
-        const usersCodeChef = await UserModel.find({ CodeChef: true, emailNotifications: true });
-        const emails_leetcode = usersLeetCode.map(user => user.email);
-        const emails_codeforces = usersCodeForces.map(user => user.email);
-        const emails_codechef = usersCodeChef.map(user => user.email);
+        const usersLeetCode = await UserModel.find({ LeetCode: true, emailNotifications: true }).select('_id email');
+        const usersCodeForces = await UserModel.find({ CodeForces: true, emailNotifications: true }).select('_id email');
+        const usersCodeChef = await UserModel.find({ CodeChef: true, emailNotifications: true }).select('_id email');
+        const appUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -32,25 +31,32 @@ export async function sendContestDetails(contestDetails: Contest[]): Promise<Api
             }
         });
         for (const contest of contestDetails) {
-            const emails: string[] = [];
+            let recipients: { _id: string; email: string }[] = [];
             if (contest.platform === 'LeetCode') {
-                emails.push(...emails_leetcode);
+                recipients = usersLeetCode.map((user) => ({ _id: String(user._id), email: user.email }));
             } else if (contest.platform === 'CodeForces') {
-                emails.push(...emails_codeforces);
+                recipients = usersCodeForces.map((user) => ({ _id: String(user._id), email: user.email }));
             } else if (contest.platform === 'CodeChef') {
-                emails.push(...emails_codechef);
+                recipients = usersCodeChef.map((user) => ({ _id: String(user._id), email: user.email }));
             }
-            const htmlcontent = await render(React.createElement(ContestEmail, { ...contest }));
-            const mailOptions: MailOptions = {
-                from: process.env.NODEMAILER_EMAIL,
-                to: emails,
-                subject: 'Contest Update',
-                html: htmlcontent
-            };
-            try {
-                await transporter.sendMail(mailOptions);
-            } catch (err) {
-                console.error(`❌ Failed to send mail for contest "${contest.name}":`, err);
+
+            for (const user of recipients) {
+                const token = createUnsubscribeToken(user._id);
+                const unsubscribeUrl = token
+                    ? `${appUrl}/api/unsubscribe-contest?userId=${encodeURIComponent(user._id)}&token=${token}`
+                    : undefined;
+                const htmlcontent = await render(React.createElement(ContestEmail, { ...contest, unsubscribeUrl }));
+                const mailOptions: MailOptions = {
+                    from: process.env.NODEMAILER_EMAIL,
+                    to: user.email,
+                    subject: 'Contest Update',
+                    html: htmlcontent
+                };
+                try {
+                    await transporter.sendMail(mailOptions);
+                } catch (err) {
+                    console.error(`❌ Failed to send mail for contest "${contest.name}" to "${user.email}":`, err);
+                }
             }
         }
         return {
