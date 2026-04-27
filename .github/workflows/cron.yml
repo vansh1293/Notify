@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Call send-reminders API
-        run: curl -X GET https://notify.himanshu.engineer/api/send-reminders
+        run: curl -X GET https://notify.vansharora.codes/api/send-reminders
 
       - name: Call update-contest API
-        run: curl -X GET https://notify.himanshu.engineer/api/update-contest
+        run: curl -X GET https://notify.vansharora.codes/api/update-contest
