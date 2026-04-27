@@ -57,7 +57,7 @@ export async function GET(req: NextRequest) {
             await transporter.sendMail({
                 from: process.env.NODEMAILER_EMAIL,
                 to: user.email,
-                subject: "You've been unsubscribed from Contest Tracker",
+                subject: "You've been unsubscribed from Notify",
                 html,
             });
         } catch (mailErr) {

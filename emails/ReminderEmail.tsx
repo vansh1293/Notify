@@ -17,8 +17,8 @@ import { Contest } from "@/model/Contest";
 // ─── Platform Config ──────────────────────────────────────────────────────────
 const platformConfig = {
     LeetCode: {
-        accent: "#F59E0B",
-        accentDark: "#D97706",
+        accent: "#FFFFFF",
+        accentDark: "#D1D5DB",
         badge: "⚡ LeetCode",
         emoji: "⏰",
     },
@@ -238,7 +238,7 @@ export default function ReminderEmail({
 
                     {/* ── Header ── */}
                     <Section style={styles.header}>
-                        <Text style={styles.wordmark}>Contest Tracker</Text>
+                        <Text style={styles.wordmark}>Notify</Text>
 
                         <Text
                             style={{
@@ -356,7 +356,7 @@ export default function ReminderEmail({
                     {/* ── Footer ── */}
                     <Section style={styles.footer}>
                         <Text style={styles.footerText}>
-                            Good luck! You&apos;re receiving this reminder because you set it up on Contest Tracker.
+                            Good luck! You&apos;re receiving this reminder because you set it up on Notify.
                         </Text>
                         <Text style={styles.footerText}>
                             <Link href={unsubscribeUrl} style={styles.footerLink}>

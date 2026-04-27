@@ -134,13 +134,13 @@ export default function VerificationEmail({ username, otp }: VerificationEmailPr
     return (
         <Html lang="en">
             <Head />
-            <Preview>🔐 Your Contest Tracker verification code: {otp}</Preview>
+            <Preview>🔐 Your Notify verification code: {otp}</Preview>
             <Body style={styles.body}>
                 <Container style={styles.container}>
 
                     {/* ── Header ── */}
                     <Section style={styles.header}>
-                        <Text style={styles.wordmark}>Contest Tracker</Text>
+                        <Text style={styles.wordmark}>Notify</Text>
                         <Text style={{ fontSize: "36px", margin: "0 0 16px" }}>🔐</Text>
                         <Text style={styles.headline}>Verify your email</Text>
                         <Text style={styles.subHeadline}>
@@ -163,7 +163,7 @@ export default function VerificationEmail({ username, otp }: VerificationEmailPr
                         </Section>
 
                         <Text style={styles.disclaimer}>
-                            If you didn&apos;t create a Contest Tracker account, you can safely ignore this email.
+                            If you didn&apos;t create a Notify account, you can safely ignore this email.
                             Someone may have entered your address by mistake.
                         </Text>
                     </Section>
@@ -173,7 +173,7 @@ export default function VerificationEmail({ username, otp }: VerificationEmailPr
                     {/* ── Footer ── */}
                     <Section style={styles.footer}>
                         <Text style={styles.footerText}>
-                            © Contest Tracker · This is an automated message, please do not reply.
+                            © Notify · This is an automated message, please do not reply.
                         </Text>
                     </Section>
 

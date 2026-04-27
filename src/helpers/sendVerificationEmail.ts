@@ -23,7 +23,7 @@ export async function sendVerificationEmail(email: string, username: string, ver
         const mailOptions: MailOptions = {
             from: process.env.NODEMAILER_EMAIL,
             to: email,
-            subject: 'Contest Tracker Verification OTP',
+            subject: 'Notify Verification OTP',
             html: htmlcontent
         };
         await transporter.sendMail(mailOptions);

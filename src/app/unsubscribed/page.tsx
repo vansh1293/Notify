@@ -1,8 +1,8 @@
 import Link from "next/link";
 
 export const metadata = {
-    title: "Unsubscribed | Contest Tracker",
-    description: "You have been successfully unsubscribed from Contest Tracker email notifications.",
+    title: "Unsubscribed | Notify",
+    description: "You have been successfully unsubscribed from Notify email notifications.",
 };
 
 export default function UnsubscribedPage() {
@@ -66,7 +66,7 @@ export default function UnsubscribedPage() {
                             You&apos;re unsubscribed
                         </h1>
                         <p className="text-[14px] text-white/40 leading-relaxed mb-8 max-w-[300px] mx-auto">
-                            You&apos;ve been removed from all Contest Tracker email alerts and reminders. No further emails will be sent.
+                            You&apos;ve been removed from all Notify email alerts and reminders. No further emails will be sent.
                         </p>
 
                         {/* ── Status pill ── */}

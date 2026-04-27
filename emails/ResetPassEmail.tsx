@@ -137,13 +137,13 @@ export default function ResetPassEmail({ username, resetCode }: ResetPassProps) 
     return (
         <Html lang="en">
             <Head />
-            <Preview>🔑 Your Contest Tracker password reset code: {resetCode}</Preview>
+            <Preview>🔑 Your Notify password reset code: {resetCode}</Preview>
             <Body style={styles.body}>
                 <Container style={styles.container}>
 
                     {/* ── Header ── */}
                     <Section style={styles.header}>
-                        <Text style={styles.wordmark}>Contest Tracker</Text>
+                        <Text style={styles.wordmark}>Notify</Text>
                         <Text style={{ fontSize: "36px", margin: "0 0 16px" }}>🔑</Text>
                         <Text style={styles.headline}>Reset your password</Text>
                         <Text style={styles.subHeadline}>
@@ -173,7 +173,7 @@ export default function ResetPassEmail({ username, resetCode }: ResetPassProps) 
                         </Section>
 
                         <Text style={styles.disclaimer}>
-                            This link was requested from your Contest Tracker account. For security, this code expires in 10 minutes and can only be used once.
+                            This link was requested from your Notify account. For security, this code expires in 10 minutes and can only be used once.
                         </Text>
                     </Section>
 
@@ -182,7 +182,7 @@ export default function ResetPassEmail({ username, resetCode }: ResetPassProps) 
                     {/* ── Footer ── */}
                     <Section style={styles.footer}>
                         <Text style={styles.footerText}>
-                            © Contest Tracker · This is an automated security email, please do not reply.
+                            © Notify · This is an automated security email, please do not reply.
                         </Text>
                     </Section>
 

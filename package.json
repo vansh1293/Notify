@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "migrate:unsubscribe-tokens": "node scripts/migrate-unsubscribe-tokens.mjs"
+    "migrate:unsubscribe-tokens": "node scripts/migrate-unsubscribe-tokens.mjs",
+    "announce": "node scripts/send-announcement.mjs",
+    "announce:dry-run": "DRY_RUN=true node scripts/send-announcement.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",

@@ -79,7 +79,7 @@ export default function UnsubscribeEmail({
                                 margin: "0 0 32px",
                             }}
                         >
-                            Contest Tracker
+                            Notify
                         </Text>
 
                         {/* Large goodbye icon */}
@@ -360,7 +360,7 @@ export default function UnsubscribeEmail({
                                 margin: "0",
                             }}
                         >
-                            © Contest Tracker &nbsp;·&nbsp; All rights reserved
+                            © Notify &nbsp;·&nbsp; All rights reserved
                         </Text>
                     </Section>
 

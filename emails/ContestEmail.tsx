@@ -17,11 +17,11 @@ import { Contest } from "@/model/Contest";
 // ─── Platform Config ──────────────────────────────────────────────────────────
 const platformConfig = {
     LeetCode: {
-        accent: "#F59E0B",
-        accentDark: "#D97706",
-        accentLight: "#FEF3C7",
+        accent: "#FFFFFF",
+        accentDark: "#D1D5DB",
+        accentLight: "#F9FAFB",
         badge: "⚡ LeetCode",
-        emoji: "🟡",
+        emoji: "⚪",
     },
     CodeForces: {
         accent: "#3B82F6",
@@ -186,7 +186,7 @@ export default function ContestEmail({
 
                     {/* ── Header ── */}
                     <Section style={styles.header}>
-                        <Text style={styles.wordmark}>Contest Tracker</Text>
+                        <Text style={styles.wordmark}>Notify</Text>
 
                         {/* Platform badge */}
                         <Text
