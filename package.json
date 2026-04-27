@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "migrate:unsubscribe-tokens": "node scripts/migrate-unsubscribe-tokens.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",

@@ -19,6 +19,7 @@ export interface User extends Document {
   emailNotifications?: boolean;
   browserNotifications?: boolean;
   pushNotifications?: boolean;
+  unsubscribeToken?: string;
   friends?: friend[];
 }
 
@@ -48,6 +49,7 @@ const UserSchema: Schema<User> = new Schema({
   emailNotifications: { type: Boolean, default: true },
   browserNotifications: { type: Boolean, default: true },
   pushNotifications: { type: Boolean, default: false },
+  unsubscribeToken: { type: String },
   friends: {
     type: [
       {

@@ -7,23 +7,25 @@ import UserModel from '@/model/User';
 import { Contest } from '@/model/Contest';
 import * as React from 'react';
 import ContestEmail from '../../emails/ContestEmail';
+import { generateUnsubscribeToken } from './unsubscribeToken';
 
 interface MailOptions {
     from: string | undefined;
-    to: string[];
+    to: string;
     subject: string;
     html: string;
 }
+
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+
+// Only send alert emails for contests starting within this window
+const EMAIL_ALERT_WINDOW_MS = 48 * 60 * 60 * 1000; // 2 days
+
 export async function sendContestDetails(contestDetails: Contest[]): Promise<ApiResponse> {
     try {
         console.log("📧 Sending contest details...");
         await dbConnect();
-        const usersLeetCode = await UserModel.find({ LeetCode: true, emailNotifications: true });
-        const usersCodeForces = await UserModel.find({ CodeForces: true, emailNotifications: true });
-        const usersCodeChef = await UserModel.find({ CodeChef: true, emailNotifications: true });
-        const emails_leetcode = usersLeetCode.map(user => user.email);
-        const emails_codeforces = usersCodeForces.map(user => user.email);
-        const emails_codechef = usersCodeChef.map(user => user.email);
+
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -31,28 +33,48 @@ export async function sendContestDetails(contestDetails: Contest[]): Promise<Api
                 pass: process.env.NODEMAILER_PASS
             }
         });
+
         for (const contest of contestDetails) {
-            const emails: string[] = [];
-            if (contest.platform === 'LeetCode') {
-                emails.push(...emails_leetcode);
-            } else if (contest.platform === 'CodeForces') {
-                emails.push(...emails_codeforces);
-            } else if (contest.platform === 'CodeChef') {
-                emails.push(...emails_codechef);
+            // Only email users if the contest starts within the next 2 days
+            const now = new Date();
+            const startsIn = new Date(contest.startTime).getTime() - now.getTime();
+            if (startsIn > EMAIL_ALERT_WINDOW_MS) {
+                console.log(`⏭️ Skipping email for "${contest.name}" — starts in more than 2 days.`);
+                continue;
             }
-            const htmlcontent = await render(React.createElement(ContestEmail, { ...contest }));
-            const mailOptions: MailOptions = {
-                from: process.env.NODEMAILER_EMAIL,
-                to: emails,
-                subject: 'Contest Update',
-                html: htmlcontent
-            };
-            try {
-                await transporter.sendMail(mailOptions);
-            } catch (err) {
-                console.error(`❌ Failed to send mail for contest "${contest.name}":`, err);
+
+            // Pick users subscribed to this platform + email notifications enabled
+            const platformKey = contest.platform as 'LeetCode' | 'CodeForces' | 'CodeChef';
+            const users = await UserModel.find({ [platformKey]: true, emailNotifications: true });
+
+            for (const user of users) {
+                // Ensure user has a persistent unsubscribe token
+                if (!user.unsubscribeToken) {
+                    user.unsubscribeToken = generateUnsubscribeToken();
+                    await user.save();
+                }
+
+                const unsubscribeUrl = `${BASE_URL}/api/unsubscribe?token=${user.unsubscribeToken}`;
+
+                const htmlcontent = await render(
+                    React.createElement(ContestEmail, { ...contest, unsubscribeUrl })
+                );
+
+                const mailOptions: MailOptions = {
+                    from: process.env.NODEMAILER_EMAIL,
+                    to: user.email,
+                    subject: 'Contest Update',
+                    html: htmlcontent
+                };
+
+                try {
+                    await transporter.sendMail(mailOptions);
+                } catch (err) {
+                    console.error(`❌ Failed to send mail to ${user.email} for contest "${contest.name}":`, err);
+                }
             }
         }
+
         return {
             success: true,
             message: "Contest details sent successfully.",

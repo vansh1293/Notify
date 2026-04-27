@@ -7,6 +7,9 @@ import ReminderModel, { Reminder } from '@/model/Reminder';
 import ReminderEmail from '../../emails/ReminderEmail';
 import dbConnect from '@/lib/dbConnect';
 import UserModel from '@/model/User';
+import { generateUnsubscribeToken } from './unsubscribeToken';
+
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
 interface MailOptions {
     from: string | undefined;
@@ -32,7 +35,15 @@ export async function sendRemindersOneHour(tosend: Reminder[]): Promise<ApiRespo
                 continue;
             }
             const contest = reminder.contest;
-            const htmlcontent = await render(React.createElement(ReminderEmail, { code: contest.code, name: contest.name, platform: contest.platform, startTime: contest.startTime, endTime: contest.endTime, duration: contest.duration, url: contest.url }));
+
+            // Ensure user has a persistent unsubscribe token
+            if (!user.unsubscribeToken) {
+                user.unsubscribeToken = generateUnsubscribeToken();
+                await user.save();
+            }
+            const unsubscribeUrl = `${BASE_URL}/api/unsubscribe?token=${user.unsubscribeToken}`;
+
+            const htmlcontent = await render(React.createElement(ReminderEmail, { code: contest.code, name: contest.name, platform: contest.platform, startTime: contest.startTime, endTime: contest.endTime, duration: contest.duration, url: contest.url, unsubscribeUrl }));
             const mailOptions: MailOptions = {
                 from: process.env.NODEMAILER_EMAIL,
                 to: user.email,
@@ -75,7 +86,15 @@ export async function sendRemindersOneDay(tosendOneDay: Reminder[]): Promise<Api
                 continue;
             }
             const contest = reminder.contest;
-            const htmlcontent = await render(React.createElement(ReminderEmail, { code: contest.code, name: contest.name, platform: contest.platform, startTime: contest.startTime, endTime: contest.endTime, duration: contest.duration, url: contest.url }));
+
+            // Ensure user has a persistent unsubscribe token
+            if (!user.unsubscribeToken) {
+                user.unsubscribeToken = generateUnsubscribeToken();
+                await user.save();
+            }
+            const unsubscribeUrl = `${BASE_URL}/api/unsubscribe?token=${user.unsubscribeToken}`;
+
+            const htmlcontent = await render(React.createElement(ReminderEmail, { code: contest.code, name: contest.name, platform: contest.platform, startTime: contest.startTime, endTime: contest.endTime, duration: contest.duration, url: contest.url, unsubscribeUrl }));
             const mailOptions: MailOptions = {
                 from: process.env.NODEMAILER_EMAIL,
                 to: user.email,
